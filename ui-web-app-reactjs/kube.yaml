@@ -9,7 +9,7 @@ spec:
   selector:
     matchLabels:
       app: "react-ui"
-  replicas: 1
+  replicas: 2
   strategy:
     rollingUpdate:
       maxSurge: 25%

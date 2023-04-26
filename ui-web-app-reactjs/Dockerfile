@@ -3,7 +3,7 @@ LABEL maintainer="deekshith@gmail.com"
 #RUN useradd uiapp 
 WORKDIR /app
 COPY . .
-#RUN npm install
+RUN npm install
 EXPOSE 8080
 #USER uiapp
 CMD ["npm","start"]

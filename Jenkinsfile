@@ -41,6 +41,12 @@ pipeline {
                                     sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=shoe-spring-boot -Dsonar.projectName=shoes-spring-boot"
                                 }
                             }
+                            dir('zuul-api-gateway') {
+                                def mvn = tool 'maven3';
+                                withSonarQubeEnv('sonar-pro') {
+                                    sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=zuul-api -Dsonar.projectName=zuul-api"
+                                }
+                            }
                         }
                     },
                     'python app': {
@@ -82,6 +88,14 @@ pipeline {
                             docker push comdevops/ui:v10
                             docker rmi comdevops/ui:v10
                             """
+                        }
+                    },
+                    'zuul-api-gateway' : {
+                        dir('zuul-api-gateway'){
+                            sh """
+                            docker build -t comdevops/api:v3 .
+                            docker push comdevops/api:v3
+                            docker rmi comdevops/api:v3"""
                         }
                     },
                     'offers-microservice-spring-boot': {
@@ -203,4 +217,4 @@ pipeline {
             }
         }
     }
-}                   
+} 

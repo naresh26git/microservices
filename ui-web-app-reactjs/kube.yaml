@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: "react-ui"
-        image:  comdevops/ui:v11
+        image:  comdevops/ui:v1
         ports:
         - containerPort:  8080
           name: "react-ui"

@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('SCM Checkout'){
             steps {
-            git branch: 'main', credentialsId: 'jen-cred', url: 'https://github.com/st-naresh/sub-micro.git'
+            git branch: 'main', url: 'https://github.com/naresh26git/microservices.git'
             sh 'ls'
             }
         }
@@ -24,7 +24,6 @@ pipeline {
                                     sh "${scannerHome}/bin/sonar-scanner"
                                 }
                             }
-
                         }
                     },
                     'spring boot application': {
@@ -58,13 +57,13 @@ pipeline {
                                     -D sonar.projectVersion=1.0-SNAPSHOT \
                                     -D sonar.sources=. \
                                     -D sonar.login=admin \
-                                    -D sonar.password=admin \
+                                    -D sonar.password=admin123 \
                                     -D sonar.projectKey=project \
                                     -D sonar.projectName=wishlist-py \
                                     -D sonar.inclusions=index.py \
                                     -D sonar.sourceEncoding=UTF-8 \
                                     -D sonar.language=python \
-                                    -D sonar.host.url=http://180.151.249.202:9000/"""
+                                    -D sonar.host.url=http://3.108.53.193:9000/"""
                                 }
                             }
                         }
@@ -84,22 +83,32 @@ pipeline {
                         dir('ui-web-app-reactjs'){
                             sh """
                             docker images
-                            docker build -t comdevops/ui:v10 .
-                            docker push comdevops/ui:v10
-                            docker rmi comdevops/ui:v10
+                            docker build -t comdevops/ui:v1 .
+                            docker push comdevops/ui:v1
+                            docker rmi comdevops/ui:v1
                             """
                         }
                     },
                     'zuul-api-gateway' : {
                         dir('zuul-api-gateway'){
                             sh """
-                            docker build -t comdevops/api:v3 .
-                            docker push comdevops/api:v3
-                            docker rmi comdevops/api:v3"""
+                            docker build -t comdevops/api:v1 .
+                            docker push comdevops/api:v1
+                            docker rmi comdevops/api:v1
+                            """
                         }
                     },
                     'offers-microservice-spring-boot': {
                         dir('offers-microservice-spring-boot'){
+                            sh """
+                            docker build -t comdevops/spring:v1 .
+                            docker push comdevops/spring:v1
+                            docker rmi comdevops/spring:v1
+                            """
+                        }
+                    },
+                    'shoes-microservice-spring-boot': {
+                        dir('shoes-microservice-spring-boot'){
                             sh """
                             docker build -t comdevops/spring:v2 .
                             docker push comdevops/spring:v2
@@ -107,30 +116,21 @@ pipeline {
                             """
                         }
                     },
-                    'shoes-microservice-spring-boot': {
-                        dir('shoes-microservice-spring-boot'){
-                            sh """
-                            docker build -t comdevops/spring:v4 .
-                            docker push comdevops/spring:v4
-                            docker rmi comdevops/spring:v4
-                            """
-                        }
-                    },
                     'cart-microservice-nodejs': {
                         dir('cart-microservice-nodejs'){
                             sh """
-                            docker build -t comdevops/ui:v3 .
-                            docker push comdevops/ui:v3
-                            docker rmi comdevops/ui:v3
+                            docker build -t comdevops/ui:v2 .
+                            docker push comdevops/ui:v2
+                            docker rmi comdevops/ui:v2
                             """
                         }
                     },
                     'wishlist-microservice-python': {
                         dir('wishlist-microservice-python'){
                             sh """
-                            docker build -t comdevops/python:v2 .
-                            docker push comdevops/python:v2
-                            docker rmi comdevops/python:v2
+                            docker build -t comdevops/python:v1 .
+                            docker push comdevops/python:v1
+                            docker rmi comdevops/python:v1
                             """
                         }
                     }
@@ -138,83 +138,25 @@ pipeline {
             }
         }
         stage ('Deploy on k8s'){
-            steps {
+            steps{
                 parallel (
                     'deploy on k8s': {
                         script {
-                            //sh 'minikube stop'
-                            //sh 'minikube delete'
-                            //sh 'minikube start'
-                            sh 'minikube status'
-                            //sh 'kubectl create ns ms'
-                            //sh 'kubectl config set-context --current --namespace=ms'
-                           // sh 'kubectl create secret docker-registry javapipe --docker-username comdevops --docker-password Dev-ops@123'
-                           // sh 'kubectl get secret -n ms javapipe -oyaml> secret.yaml'
-                            //sh 'kubectl apply -f secret.yaml'
-                            //sh 'kubectl create secret generic javapipe --from-file=.dockerconfigjson=/opt/docker/config.json -n ms --type kubernetes.io/dockerconfigjson --dry-run=client -oyaml > secret.yaml'
-                            //sh 'kubectl apply -f secret.yaml'
+                            sh """
+                            kubectl create ns ms
+                            kubectl config set-context --current --namespace=ms
+                            """
                         }
                     },
-                    'ui-web-app-reactjs': {
-                        dir('ui-web-app-reactjs'){
-                            sh 'kubectl apply -f kube.yaml'
-                            //sh 'kubectl get secrets'
+                    'kubernetes':{
+                         dir('kubernetes'){
+                            sh 'kubectl apply -f yamlfile'
                             sh 'kubectl get pods -o wide'
                             sh 'kubectl get svc'
-                            sh 'kubectl get node -o wide'
-                            sh 'kubectl get deployment'
-                            //sh 'kubectl describe pod react-ui'
-                        }
-                    },
-                    'zuul-api-gateway': {
-                        dir('zuul-api-gateway'){
-                            sh 'kubectl apply -f kube.yaml'
-                            sh 'kubectl get pods -o wide'
-                            sh 'kubectl get svc'
-                            sh 'kubectl get node -o wide'
-                            sh 'kubectl get deployment'
-                        }
-                    },
-                    'shoes-microservice-spring-boot': {
-                        dir('shoes-microservice-spring-boot'){
-                            sh 'kubectl apply -f kube.yaml'
-                            sh 'kubectl get pods -o wide'
-                            sh 'kubectl get svc'
-                            sh 'kubectl get node -o wide'
-                            sh 'kubectl get deployment'
-                        }
-                    },
-                    'offers-microservice-spring-boot': {
-                        dir('offers-microservice-spring-boot'){
-                            sh 'kubectl apply -f kube.yaml'
-                            sh 'kubectl get pods -o wide'
-                            sh 'kubectl get svc'
-                            sh 'kubectl get node -o wide'
-                            sh 'kubectl get deployment'
-                        }
-                    },
-                    'cart-microservice-nodejs':{
-                        dir('cart-microservice-nodejs'){
-                            sh 'kubectl apply -f kube.yaml'
-                            sh 'kubectl get pods -o wide'
-                            sh 'kubectl get svc'
-                            sh 'kubectl get node -o wide'
-                            sh 'kubectl get deployment'
-                            
-                        }
-                    },
-                    'wishlist-microservice-python':{
-                        dir('wishlist-microservice-python'){
-                            sh 'kubectl apply -f kube.yaml'
-                            sh 'kubectl get pods -o wide'
-                            sh 'kubectl get svc'
-                            sh 'kubectl get node -o wide'
-                            sh 'kubectl get deployment'
-                        }
+                         }
                     }
-
                 )
             }
         }
     }
-} 
+}

@@ -1,5 +1,4 @@
 FROM node:8.7-alpine
-LABEL maintainer="deekshith@gmail.com"
 #RUN useradd uiapp 
 WORKDIR /app
 COPY . .

@@ -1,11 +1,9 @@
-FROM node:8
+FROM node:8.7-alpine
+LABEL maintainer="deekshith@gmail.com"
+#RUN useradd uiapp 
 WORKDIR /app
 COPY . .
-
-RUN npm install express
-RUN npm install
-
+#RUN npm install
 EXPOSE 8080
-
-#Runs in development Mode
-CMD ["npm", "start"]
+#USER uiapp
+CMD ["npm","start"]

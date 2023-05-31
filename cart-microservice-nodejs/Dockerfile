@@ -1,4 +1,5 @@
 FROM node:14
+USER root
 WORKDIR /app 
 COPY . .
 RUN npm install

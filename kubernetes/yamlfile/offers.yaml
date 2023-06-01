@@ -37,7 +37,7 @@ metadata:
 spec:
   selector:
     app: "offer"
-  type: ClusterIP
+  type: NodePort
   ports:
   - name: "shoe"
     port: 1001

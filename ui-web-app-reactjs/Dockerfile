@@ -1,9 +1,11 @@
-FROM node:latest
-MAINTAINER Naresh
-RUN echo "try to build my application"
-WORKDIR /app 
+FROM node:8
+WORKDIR /app
 COPY . .
+
+RUN npm install express
 RUN npm install
+
 EXPOSE 8080
-ENTRYPOINT ["npm","start"]
-CMD ["node","index.js"]
+
+#Runs in development Mode
+CMD ["npm", "start"]

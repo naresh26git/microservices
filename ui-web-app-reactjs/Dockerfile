@@ -1,7 +1,9 @@
-FROM node:8.7-alpine
-LABEL maintainer="naresh@gmail.com"
-WORKDIR /app
+FROM node:latest
+MAINTAINER Naresh
+RUN echo "try to build my application"
+WORKDIR /app 
 COPY . .
-#RUN npm install
+RUN npm install
 EXPOSE 8080
-CMD ["npm","start"]
+ENTRYPOINT ["npm","start"]
+CMD ["node","index.js"]

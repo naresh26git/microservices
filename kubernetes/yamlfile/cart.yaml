@@ -23,11 +23,10 @@ spec:
       containers:
       - name: "cart"
         image:  comdevops/ui:v2
+        imagePullPolicy: Always
         ports:
         - containerPort:  1004
           name: "cart"
-      imagePullSecrets:
-      - name: javapipe
 ---
 apiVersion: v1
 kind: Service

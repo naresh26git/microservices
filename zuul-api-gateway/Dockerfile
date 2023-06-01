@@ -2,7 +2,7 @@ FROM maven as build
 USER root
 WORKDIR /app
 COPY . .
-RUN mvn clean package 
+#RUN mvn clean package 
 
 FROM openjdk:11.0.10-jre
 WORKDIR /app

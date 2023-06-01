@@ -23,11 +23,10 @@ spec:
       containers:
       - name: "react-ui"
         image:  comdevops/ui:v1
+        imagePullPolicy: Always
         ports:
         - containerPort:  8080
           name: "react-ui"
-      imagePullSecrets:
-      - name: javapipe
 ---
 apiVersion: v1
 kind: Service

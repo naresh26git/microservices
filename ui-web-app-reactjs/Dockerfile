@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:8
 RUN echo " Try to build my application"
 COPY . /var/www
 WORKDIR /var/www

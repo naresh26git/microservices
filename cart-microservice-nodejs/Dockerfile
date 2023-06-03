@@ -1,11 +1,7 @@
 FROM node:8
-WORKDIR /app
-COPY . .
-
-#RUN npm install express
-#RUN npm install
-
+RUN echo " Try to build my application"
+COPY . /var/www
+WORKDIR /var/www
+RUN npm install
 EXPOSE 1004
-
-#Runs in development Mode
-CMD ["npm", "start"]
+ENTRYPOINT ["npm","start"]

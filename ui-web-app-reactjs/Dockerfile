@@ -1,12 +1,12 @@
-FROM node:latest
+FROM node:8
 WORKDIR /app
-COPY package*.json ./
+#COPY package*.json ./
 
 #RUN npm install express
 COPY . .
-#RUN npm install
+RUN npm install
 
 EXPOSE 3000
 
 #Runs in development Mode
-CMD ["npm", "run","build"]
+CMD ["npm", "start","build"]

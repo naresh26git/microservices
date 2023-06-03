@@ -1,9 +1,9 @@
-FROM node:8
+FROM node:latest
 WORKDIR /app
 COPY . .
 
-#RUN npm install express
-#RUN npm install
+RUN npm install express
+RUN npm install
 
 EXPOSE 3000
 

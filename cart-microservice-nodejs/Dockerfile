@@ -1,7 +1,6 @@
-FROM node:8
-RUN echo " Try to build my application"
+FROM node:14
+WORKDIR /app 
 COPY . .
-WORKDIR /app
 RUN npm install
 EXPOSE 1004
-ENTRYPOINT ["npm","start","index.js","node"]
+CMD ["node","index.js"]

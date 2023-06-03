@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: "cart"
-        image:  comdevops/ui:v3
+        image:  comdevops/api:v2
         imagePullPolicy: Always
         ports:
         - containerPort:  1004

@@ -15,13 +15,13 @@ pipeline {
                             dir('cart-microservice-nodejs') {
                                 def scannerHome = tool 'sonarscanner4'
                                  withSonarQubeEnv('sonar-pro') {
-                                     sh "${scannerHome}/bin/sonar-scanner"
+                                     sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=cart-nodejs"
                                  }
                             }
                             dir('ui-web-app-reactjs') {
                                 def scannerHome = tool 'sonarscanner4';
                                 withSonarQubeEnv('sonar-pro') {
-                                    sh "${scannerHome}/bin/sonar-scanner"
+                                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=ui-reactjs"
                                 }
                             }
                         }
@@ -63,7 +63,7 @@ pipeline {
                                     -D sonar.inclusions=index.py \
                                     -D sonar.sourceEncoding=UTF-8 \
                                     -D sonar.language=python \
-                                    -D sonar.host.url=http://3.108.53.193:9000/"""
+                                    -D sonar.host.url=http://13.232.29.132:9000/"""
                                 }
                             }
                         }
@@ -82,7 +82,6 @@ pipeline {
                     'ui-web-app-reactjs': {
                         dir('ui-web-app-reactjs'){
                             sh """
-                            docker images
                             docker build -t comdevops/ui:v1 .
                             docker push comdevops/ui:v1
                             docker rmi comdevops/ui:v1
@@ -142,18 +141,11 @@ pipeline {
                 parallel (
                     'deploy on k8s': {
                         script {
-                            sh """
-                            kubectl create ns ms
-                            kubectl config set-context --current --namespace=ms
-                            """
+                            withKubeCredentials(kubectlCredentials: [[ credentialsId: 'kubernetes', namespace: 'ms' ]]) {
+                                sh 'kubectl get ns' 
+                                sh 'kubectl apply -f kubernetes/yamlfile'
+                            }
                         }
-                    },
-                    'kubernetes':{
-                         dir('kubernetes'){
-                            sh 'kubectl apply -f yamlfile'
-                            sh 'kubectl get pods -o wide'
-                            sh 'kubectl get svc'
-                         }
                     }
                 )
             }

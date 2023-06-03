@@ -1,7 +1,6 @@
 FROM node:14
-
-WORKDIR /app
-COPY . .
+COPY . /var/www
+WORKDIR /var/www
 #RUN npm install
 
 EXPOSE 1004

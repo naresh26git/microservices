@@ -36,7 +36,7 @@ metadata:
 spec:
   selector:
     app: "react-ui"
-  type: NodePort
+  type: LoadBalancer
   ports:
   - name: "react-ui"
     port: 8081

@@ -25,7 +25,7 @@ spec:
         image:  comdevops/ui:v2
         imagePullPolicy: Always
         ports:
-        - containerPort:  3000
+        - containerPort: 8080
           name: "react-ui"
 ---
 apiVersion: v1
@@ -39,5 +39,5 @@ spec:
   type: NodePort
   ports:
   - name: "react-ui"
-    port: 3000
-    targetPort: 3000
+    port: 8080
+    targetPort: 8080

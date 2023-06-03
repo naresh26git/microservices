@@ -1,12 +1,7 @@
-FROM node:8
-WORKDIR /app
-#COPY package*.json ./
-
-#RUN npm install express
-COPY . .
+FROM node:latest
+RUN echo " Try to build my application"
+COPY . /var/www
+WORKDIR /var/www
 RUN npm install
-
 EXPOSE 3000
-
-#Runs in development Mode
-CMD ["npm", "start","build"]
+ENTRYPOINT ["npm","start"]

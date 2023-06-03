@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: "react-ui"
-        image:  comdevops/ui:v1
+        image:  comdevops/ui:v3
         imagePullPolicy: Always
         ports:
         - containerPort:  3000

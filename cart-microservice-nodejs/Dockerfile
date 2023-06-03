@@ -1,9 +1,9 @@
-FROM node:8
-RUN echo " Try to build my application"
+FROM node:14
+
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
 COPY . .
-EXPOSE 3000
+RUN npm install
+
 EXPOSE 1004
-ENTRYPOINT ["npm","start"]
+
+CMD [ "node", "index.js" ]

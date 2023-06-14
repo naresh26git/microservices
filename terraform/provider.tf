@@ -11,7 +11,7 @@ terraform {
 }
 
 provider "kubernetes" {
-    config_path    = "/opt/kube/config"
-    config_context = "minikube"
+    config_path    = "/root/.kube/config"
+    config_context = "naresh.k8s.local"
     #host = "https://192.168.58.2:8443"
 }

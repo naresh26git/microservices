@@ -11,7 +11,7 @@ terraform {
 }
 
 provider "kubernetes" {
-    config_path    = "/opt/kube/config"
+    config_path    = "/root/.kube/config"
     config_context = "naresh.k8s.local"
     #host = "https://api-naresh-k8s-local-l7m81e-495f234ae5e25657.elb.ap-south-1.amazonaws.com"
 }

@@ -1,35 +1,52 @@
 provider "kubernetes" {
   config_context_cluster = "naresh.k8s.local"
+  // Configure your Kubernetes provider settings here
 }
 
-resource "kubernetes_deployment" "example_deployment" {
+resource "kubernetes_deployment" "react_ui" {
   metadata {
-    name      = "example-deployment"
-    namespace = "example-namespace"
+    name      = "react-ui"
+    namespace = "ms"
+
+    labels = {
+      app = "react-ui"
+    }
   }
 
   spec {
-    replicas = 3
+    replicas = 1
 
     selector {
       match_labels = {
-        app = "example-app"
+        app = "react-ui"
       }
+    }
+
+    strategy {
+      rolling_update {
+        max_surge       = "25%"
+        max_unavailable = "25%"
+      }
+      type = "RollingUpdate"
     }
 
     template {
       metadata {
         labels = {
-          app = "example-app"
+          app = "react-ui"
         }
       }
 
       spec {
         container {
-          image = "your-container-image"
-          name  = "example-container"
+          name  = "react-ui"
+          image = "comdevops/ui:v1"
+
+          image_pull_policy = "Always"
+
           port {
             container_port = 8080
+            name           = "react-ui"
           }
         }
       }
@@ -37,23 +54,23 @@ resource "kubernetes_deployment" "example_deployment" {
   }
 }
 
-resource "kubernetes_service" "example_service" {
+resource "kubernetes_service" "react_ui" {
   metadata {
-    name      = "example-service"
-    namespace = "example-namespace"
+    name      = "react-ui"
+    namespace = "ms"
   }
 
   spec {
     selector = {
-      app = "example-app"
+      app = "react-ui"
     }
+
+    type = "NodePort"
 
     port {
-      protocol    = "TCP"
-      port        = 80
-      target_port = 8080
+      name       = "react-ui"
+      port       = 8081
+      targetPort = 8080
     }
-
-    type = "LoadBalancer"
   }
 }

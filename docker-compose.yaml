@@ -1,44 +1,37 @@
-version: '2'
+version: "3"
 
 services:
-  ui:
-    build: ./ui-web-app-reactjs
+  sonarqube:
+    image: sonarqube:community
+    container_name: sonarqube
+    depends_on:
+      - db
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://db:5432/sonar
+      SONAR_JDBC_USERNAME: sonar
+      SONAR_JDBC_PASSWORD: sonar
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
     ports:
-      - 8080:8080
+      - "9000:9000"
+    restart: always
 
-  zuul:
-    build: ./zuul-api-gateway
-    ports:
-      - 9999:9999
-    depends_on:
-      - ui
-  
-  shoe:
-    image: deekshithsn/shoe
-    ports:
-      - 1002:1002
-    depends_on:
-      - zuul
+  db:
+    image: postgres:12
+    container_name: postgres12
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar
+    volumes:
+      - postgresql:/var/lib/postgresql
+      - postgresql_data:/var/lib/postgresql/data
+    restart: always
 
-  offers:
-    image: deekshithsn/offer
-    ports:
-      - 1001:1001
-    depends_on:
-      - zuul
-
-  cart:
-    image: deekshithsn/cart
-    ports:
-      - 1004:1004
-    depends_on:
-      - zuul
-
-  wishlist:
-    image: deekshithsn/wishlist
-#    volumes:
-#      - ./wishlist-microservice-python:.
-    ports:
-      - 1003:5000
-    depends_on:
-      - zuul
+volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+  postgresql:
+  postgresql_data:

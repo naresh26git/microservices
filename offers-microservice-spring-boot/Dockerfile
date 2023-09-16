@@ -2,7 +2,7 @@ FROM maven as build
 USER root
 WORKDIR /app
 COPY . .
-#RUN mvn install 
+RUN mvn install 
 
 FROM openjdk:11.0.10-jre
 WORKDIR /app
